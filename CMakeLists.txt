@@ -66,9 +66,10 @@ endif()
 # ExternalProject_Add() or make downstream modifications to the libjpeg-turbo
 # build system to suit their specific needs.  Please do not file bug reports,
 # feature requests, or pull requests regarding this.
-if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-  message(FATAL_ERROR "The ${CMAKE_PROJECT_NAME} build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
-endif()
+# Mitsuba downstream modification: allow add_subdirectory() integration.
+# if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+#   message(FATAL_ERROR "The ${CMAKE_PROJECT_NAME} build system cannot be integrated into another build system using add_subdirectory().  Use ExternalProject_Add() instead.")
+# endif()
 
 # CMake 3.14 and later sets CMAKE_MACOSX_BUNDLE to TRUE by default when
 # CMAKE_SYSTEM_NAME is iOS, tvOS, or watchOS, which breaks the libjpeg-turbo
@@ -704,7 +705,7 @@ if(WITH_SIMD)
   if(MSVC_IDE OR XCODE)
     set_source_files_properties(${SIMD_OBJS} PROPERTIES GENERATED 1)
   endif()
-  set(SIMD_TARGET_OBJECTS $<TARGET_OBJECTS:simd>)
+  set(SIMD_TARGET_OBJECTS $<TARGET_OBJECTS:jpeg-simd>)
 endif()
 
 if(WITH_JAVA)
@@ -1962,4 +1963,4 @@ include(cmakescripts/BuildPackages.cmake)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmakescripts/cmake_uninstall.cmake.in"
   "cmake_uninstall.cmake" IMMEDIATE @ONLY)
 
-add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P cmake_uninstall.cmake)
+add_custom_target(jpeg-uninstall COMMAND ${CMAKE_COMMAND} -P cmake_uninstall.cmake)
